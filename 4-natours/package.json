@@ -4,7 +4,7 @@
   "description": "Learning node,express",
   "main": "app.js",
   "scripts": {
-    "start:dev": "nodemon server.js",
+    "start": "nodemon server.js",
     "start:prod": "set NODE_ENV=production && nodemon server.js"
   },
   "author": "Arka",
@@ -12,6 +12,7 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^4.22.2",
+    "mongoose": "^5.13.23",
     "morgan": "^1.11.0"
   },
   "devDependencies": {
