@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
-    "start:prod": "set NODE_ENV=production && nodemon server.js"
+    "start:prod": "set NODE_ENV=production && nodemon server.js",
+    "debug": "ndb server.js"
   },
   "author": "Arka",
   "license": "ISC",
@@ -14,6 +15,7 @@
     "express": "^4.22.2",
     "mongoose": "^5.13.23",
     "morgan": "^1.11.0",
+    "ndb": "^1.1.5",
     "slugify": "^1.6.9",
     "validator": "^13.15.35"
   },
