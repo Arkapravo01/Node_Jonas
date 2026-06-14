@@ -2,6 +2,23 @@ const AppError = require('./../utils/appError');
 
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
+
+  return new AppError(message, 400);
+};
+
+const handleDuplicateFieldsDB = (err) => {
+  const value = Object.values(err.keyValue)[0];
+
+  const message = `Duplicate field value: ${value}. Please use another value`;
+
+  return new AppError(message, 400);
+};
+
+const handleValidationErrorDB = (err) => {
+  const errors = Object.values(err.errors).map((el) => el.message);
+
+  const message = `Invalid input data. ${errors.join('. ')}`;
+
   return new AppError(message, 400);
 };
 
@@ -34,9 +51,6 @@ const sendErrorProd = (err, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  console.log('GLOBAL ERROR HANDLER HIT');
-  console.log('NODE_ENV =', process.env.NODE_ENV);
-  console.log('ERR NAME =', err.name);
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
 
@@ -46,40 +60,16 @@ module.exports = (err, req, res, next) => {
     let error = { ...err };
     error.message = err.message;
     error.name = err.name;
+    error.code = err.code;
+    error.errors = err.errors;
 
     if (error.name === 'CastError') error = handleCastErrorDB(error);
+
+    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+
+    if (error.name === 'ValidationError')
+      error = handleValidationErrorDB(error);
 
     sendErrorProd(error, res);
   }
 };
-
-//   console.log('1');
-//   console.log(process.env.NODE_ENV);
-//   console.log('2');
-
-//   err.statusCode = err.statusCode || 500;
-
-//   console.log('3');
-
-//   err.status = err.status || 'error';
-
-//   console.log('4');
-
-//   if (process.env.NODE_ENV === 'development') {
-//     console.log('5');
-//     return sendErrorDev(err, res);
-//   }
-
-//   console.log('6');
-
-//   if (process.env.NODE_ENV === 'production ') {
-//     console.log('7');
-
-//     return res.status(500).json({
-//       status: 'error',
-//       message: 'test'
-//     });
-//   }
-
-//   console.log('8');
-// };
