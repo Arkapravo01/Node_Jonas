@@ -44,7 +44,7 @@ app.use(mongoSanitize());
 app.use(xss());
 
 // Prevent parameter pollution
-app.use(
+app.use( 
   hpp({
     whitelist: [
       'duration',
